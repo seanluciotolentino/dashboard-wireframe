@@ -271,3 +271,51 @@ with st.expander("Scenario Modeling + Planning", expanded=True):
     fig_returns = px.line(diminishing_returns_df, x="Spend", y=channels)
     fig_returns.update_layout(xaxis_title="Spend ($)", yaxis_title="Returns ($)", legend_title="Channel")
     st.plotly_chart(fig_returns, use_container_width=True)
+
+    st.subheader("Period Comparison: Baseline versus Incremental")
+    # Dummy data for period comparison
+    comparison_data = {
+        'Category': ['Incremental', 'Baseline', 'TOTAL'] * 2,
+        'Period': ['Period 1'] * 3 + ['Period 2'] * 3,
+        'Office_Bookings': [150, 400, 550, 200, 450, 650]
+    }
+    comparison_df = pd.DataFrame(comparison_data)
+    
+    fig_comparison = px.bar(
+        comparison_df, 
+        x='Category', 
+        y='Office_Bookings',
+        color='Period',
+        barmode='group',
+        text='Office_Bookings'  # Add value labels
+    )
+    fig_comparison.update_layout(
+        yaxis_title="Office Bookings",
+        bargap=0.2
+    )
+    fig_comparison.update_traces(textposition='outside')  # Place labels outside bars
+    st.plotly_chart(fig_comparison, use_container_width=True)
+
+    st.subheader("Period over Period Change in KPI")
+    # Dummy data for channel KPI changes
+    channel_data = {
+        'Channel': ['Search', 'Social', 'Display', 'Video', 'Email'],
+        'KPI_Change': [25, -15, 40, 10, -5]
+    }
+    channel_df = pd.DataFrame(channel_data)
+    
+    fig_channel = px.bar(
+        channel_df,
+        x='Channel',
+        y='KPI_Change',
+        text=channel_df['KPI_Change'].apply(lambda x: f'{x}%')  # Add percentage labels
+    )
+    fig_channel.update_layout(
+        yaxis_title="KPI Change (%)",
+        yaxis=dict(ticksuffix="%")
+    )
+    fig_channel.update_traces(
+        textposition='outside',
+        marker_color=['green' if x >= 0 else 'red' for x in channel_df['KPI_Change']]  # Color bars based on value
+    )
+    st.plotly_chart(fig_channel, use_container_width=True)
